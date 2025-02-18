@@ -4,7 +4,12 @@ import com.vemser.rest.client.UsuarioClient;
 import com.vemser.rest.data.factory.UsuarioDataFactory;
 import com.vemser.rest.model.Usuario;
 import com.vemser.rest.model.UsuarioResponse;
+import io.qameta.allure.Description;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import io.restassured.module.jsv.JsonSchemaValidator;
+import jdk.jfr.Label;
 import net.datafaker.Faker;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +21,10 @@ public class AtualizarUsuariosTest {
     Faker faker = new Faker();
 
     @Test
+    @Story("Validar schema de atualizar usuário com sucesso")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Valida se o contrato de atualizar usuários está correto")
+    @Label("Contrato")
     public void testValidarSchemaAtualizarUsuarioComSucesso(){
 
         String idUsuario = UsuarioDataFactory.getUsuarioResponseValido().get_id();
@@ -30,6 +39,10 @@ public class AtualizarUsuariosTest {
     }
 
     @Test
+    @Story("Validar atualização de usuário com sucesso")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Validar atualização de usuário com sucesso")
+    @Label("Usuário")
     public void testDeveAtualizarUsuarioComSucesso(){
 
         String idUsuario = UsuarioDataFactory.getUsuarioResponseValido().get_id();
@@ -44,6 +57,10 @@ public class AtualizarUsuariosTest {
     }
 
     @Test
+    @Story("Validar atualização de usuário com sucesso")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Validar atualização de usuário com sucesso sem autenticação de administrador")
+    @Label("Usuário")
     public void testDeveAtualizarUsuarioAlterandoAdminStatusSemAutenticacao(){
 
         String idUsuario = UsuarioDataFactory.getUsuarioResponseValido().get_id();
@@ -58,6 +75,10 @@ public class AtualizarUsuariosTest {
     }
 
     @Test
+    @Story("Validar atualização de usuário inválido")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Validar tentativa de atualização de usuário alterando apenas o nome")
+    @Label("Usuário")
     public void testDeveAtualizarUsuarioAlterandoApenasNome(){
 
         String idUsuario = UsuarioDataFactory.getUsuarioResponseValido().get_id();

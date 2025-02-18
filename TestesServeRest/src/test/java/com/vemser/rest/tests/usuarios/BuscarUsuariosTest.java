@@ -3,14 +3,17 @@ package com.vemser.rest.tests.usuarios;
 import com.vemser.rest.client.UsuarioClient;
 import com.vemser.rest.data.factory.UsuarioDataFactory;
 import com.vemser.rest.model.UsuarioResponse;
+import io.qameta.allure.Description;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
+import jdk.jfr.Label;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-
-import static io.restassured.RestAssured.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
@@ -19,6 +22,10 @@ public class BuscarUsuariosTest {
     UsuarioClient usuarioClient = new UsuarioClient();
 
     @Test
+    @Story("Validar schema de listar usuários com sucesso")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Valida se o contrato de listar usuários está correto")
+    @Label("Contrato")
     public void testValidarSchemaListarTodosUsuariosSemFiltroComSucesso(){
 
         usuarioClient.listarUsuarios()
@@ -29,6 +36,10 @@ public class BuscarUsuariosTest {
     }
 
     @Test
+    @Story("Validar listar usuários com sucesso")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Validar listar usuários com sucesso")
+    @Label("Usuário")
     public void testListarTodosUsuariosSemFiltroComSucesso(){
 
         Response response =
@@ -42,6 +53,10 @@ public class BuscarUsuariosTest {
     }
 
     @Test
+    @Story("Validar listar usuários com parâmetro inválido")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Validar listar usuários com email inválido")
+    @Label("Usuário")
     public void testListarUsuariosPorEmailInvalido(){
 
         String email = UsuarioDataFactory.gerarEmailInvalido();
@@ -54,6 +69,10 @@ public class BuscarUsuariosTest {
     }
 
     @Test
+    @Story("Validar listar usuários com parâmetro inválido")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Validar listar usuários com ID inválido")
+    @Label("Usuário")
     public void testListarUsuariosPorIDInvalido(){
 
         String id = UsuarioDataFactory.gerarIdInvalido();
@@ -68,6 +87,10 @@ public class BuscarUsuariosTest {
     }
 
     @Test
+    @Story("Validar schema de buscar usuários por ID")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Validar contrato de busca de usuario por ID")
+    @Label("Contrato")
     public void testValidarSchemaBuscarUsuariosPorIDValidoComSucesso(){
 
         String idUsuario = UsuarioDataFactory.getUsuarioResponseValido().get_id();
@@ -80,6 +103,10 @@ public class BuscarUsuariosTest {
     }
 
     @Test
+    @Story("Validar busca de usuários por ID com sucesso")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Validar tentar busca de usuários por ID com sucesso")
+    @Label("Usuário")
     public void testBuscarUsuariosPorIDValidoComSucesso(){
 
         String idUsuario = UsuarioDataFactory.getUsuarioResponseValido().get_id();
@@ -102,6 +129,10 @@ public class BuscarUsuariosTest {
     }
 
     @Test
+    @Story("Validar busca de usuários por ID com dados inválidos")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Validar tentar busca de usuários por ID com ID inválido")
+    @Label("Usuário")
     public void testBuscarUsuariosPorIDInvalido(){
 
         String idUsuario = UsuarioDataFactory.gerarIdInvalido();
@@ -115,6 +146,10 @@ public class BuscarUsuariosTest {
     }
 
     @Test
+    @Story("Validar busca de usuários por ID com dados inválidos")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Validar tentar busca de usuários por ID inexistente")
+    @Label("Usuário")
     public void testBuscarUsuariosPorIDInexistente(){
 
         String idUsuario = UsuarioDataFactory.gerarIdInexistente();
