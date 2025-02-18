@@ -1,29 +1,22 @@
 package com.vemser.rest.data.provider;
-
-import com.vemser.rest.data.factory.ProdutoDataFactory;
-import com.vemser.rest.model.produto.ProdutoRequest;
-import com.vemser.rest.utils.constants.ProdutoConstants;
 import org.junit.jupiter.params.provider.Arguments;
-
 import java.util.stream.Stream;
+
+import static com.vemser.rest.data.factory.ProdutoDataFactory.*;
 
 public class ProdutoProvider {
 
-
-    public static Stream<Arguments> produtoComCamposVazios() {
+    public static Stream<Arguments> produtosProvider(){
         return Stream.of(
-                Arguments.of(ProdutoDataFactory.produtoComNomeVazio(), ProdutoConstants.NOME, ProdutoConstants.MSG_NOME_CAMPO_VAZIO),
-                Arguments.of(ProdutoDataFactory.produtoComPrecoVazio(), ProdutoConstants.PRECO, ProdutoConstants.MSG_PRECO_CAMPO_VAZIO),
-                Arguments.of(ProdutoDataFactory.produtoComDescricaoVazio(), ProdutoConstants.DESCRICAO, ProdutoConstants.MSG_DESCRICAO_CAMPO_VAZIO),
-                Arguments.of(ProdutoDataFactory.produtoComQTDVazio(), ProdutoConstants.QUANTIDADE, ProdutoConstants.MSG_QTD_CAMPO_VAZIO)
-
+                Arguments.of(produtoValido(), "message", 201, "Cadastro realizado com sucesso"),
+                Arguments.of(produtoSemNome(), "nome", 400, "nome não pode ficar em branco"),
+                Arguments.of(produtoSemPreco(), "preco", 400,"preco deve ser um número positivo"),
+                Arguments.of(produtoSemDescricao(), "descricao", 400,"descricao não pode ficar em branco"),
+                Arguments.of(produtoSemQuantidade(), "message", 201, "Cadastro realizado com sucesso")
         );
     }
 
-    public static Stream<Arguments> produtoComCamposPrecoEQuantidadeInvalidos() {
-        return Stream.of(
-                Arguments.of(new ProdutoRequest("Produto Teste", -1, "Descrição válida", 10),"preco", "preco deve ser um número positivo"),
-                Arguments.of(new ProdutoRequest("Produto Teste", 100, "Descrição válida", -5), "quantidade", "quantidade deve ser maior ou igual a 0")
-        );
-    }
+
+
+
 }

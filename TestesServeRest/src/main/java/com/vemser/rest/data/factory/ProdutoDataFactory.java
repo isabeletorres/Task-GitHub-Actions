@@ -1,87 +1,126 @@
 package com.vemser.rest.data.factory;
 
 import com.vemser.rest.client.ProdutoClient;
-import com.vemser.rest.model.produto.ProdutoRequest;
-import com.vemser.rest.model.usuario.UsuariosRequest;
-import com.vemser.rest.model.usuario.UsuariosResponse;
-import com.vemser.rest.utils.constants.ProdutoConstants;
-import com.vemser.rest.utils.constants.UsuariosConstants;
+import com.vemser.rest.model.Produto;
+import com.vemser.rest.model.ProdutoResponse;
+import com.vemser.rest.utils.ConfigUtils;
+import io.restassured.response.Response;
 import net.datafaker.Faker;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Locale;
-import java.util.Random;
+import java.util.Properties;
 
 public class ProdutoDataFactory {
-    static Faker faker = new Faker(new Locale("PT-BR"));
-    static Random geradorBolean = new Random();
-    private static ProdutoClient produtoClient = new ProdutoClient();
 
-    public static ProdutoRequest produtoValido() {
+    static Faker faker = new Faker();
+    static ProdutoClient produtoClient = new ProdutoClient();
+
+    public static Produto produtoValido(){
         return novoProduto();
     }
 
-    public static ProdutoRequest produtosSemCamposPreenchidos() {
-        ProdutoRequest produto = novoProduto();
-        produto.setNome("");
-        produto.setPreco(0);
-        produto.setDescricao("");
-        produto.setQuantidade(0);
-
-        return produto;
-    }
-
-    public static ProdutoRequest novoProduto() {
-        ProdutoRequest produto = new ProdutoRequest();
-        produto.setNome(faker.name().fullName());
-        produto.setPreco(faker.number().randomDigitNotZero());
-        produto.setDescricao(faker.lorem().sentence());
-        produto.setQuantidade(faker.number().numberBetween(1, 100));
-
-        return produto;
-    }
-    public static ProdutoRequest ProdutoCamposVazios(){
-        ProdutoRequest produto = novoProduto();
-        produto.setNome(StringUtils.EMPTY);
-        produto.setPreco(0);
-        produto.setDescricao(StringUtils.EMPTY);
-        produto.setQuantidade(0);
-        return produto;
-    }
-    public static ProdutoRequest produtoComNomeVazio(){
-        ProdutoRequest produto = novoProduto();
+    public static Produto produtoSemNome(){
+        Produto produto = novoProduto();
         produto.setNome(StringUtils.EMPTY);
         return produto;
     }
-    public static ProdutoRequest produtoComPrecoVazio(){
-        ProdutoRequest produto = novoProduto();
+
+    public static Produto produtoSemPreco(){
+        Produto produto = novoProduto();
         produto.setPreco(0);
         return produto;
     }
-    public static ProdutoRequest produtoComDescricaoVazio(){
-        ProdutoRequest produto = novoProduto();
+
+    public static Produto produtoSemDescricao(){
+        Produto produto = novoProduto();
         produto.setDescricao(StringUtils.EMPTY);
         return produto;
     }
-    public static ProdutoRequest produtoComQTDVazio(){
-        ProdutoRequest produto = novoProduto();
-        produto.setQuantidade(null);
+
+    public static Produto produtoSemQuantidade(){
+        Produto produto = novoProduto();
+        produto.setQuantidade(0);
         return produto;
     }
-    public static String cadastrarProdutoERetornarID(ProdutoRequest produto, String token) {
 
-        return produtoClient.cadastrarProdutosComAuth(novoProduto(), token)
-                .then()
-                    .extract().path(ProdutoConstants.ID);
-
+    public static Produto produtoComPrecoInvalido(){
+        Produto produto = novoProduto();
+        produto.setPreco(-1);
+        return produto;
     }
 
-    public static Object[] atualizarProdutoComDadosValidos(String token) {
-        ProdutoRequest novoProduto = novoProduto();
-        String idProduto = cadastrarProdutoERetornarID(novoProduto, token);
-        return new Object[]{novoProduto, idProduto};
+    public static Produto produtoComQuantidadeInvalido(){
+        Produto produto = novoProduto();
+        produto.setQuantidade(-1);
+        return produto;
     }
-    public static String idInvalido(){
-        return faker.idNumber().invalid();
+
+    public static Produto novoProduto(){
+        Produto produto = new Produto();
+        produto.setNome(faker.lorem().fixedString(20));
+        produto.setDescricao(faker.lorem().fixedString(20));
+        produto.setPreco(faker.number().numberBetween(50,1000));
+        produto.setQuantidade(faker.number().numberBetween(10,99));
+        return produto;
     }
+
+    public static String getIdValido(){
+        Response response =
+                produtoClient.listarProduto()
+                        .then()
+                        .extract().response()
+                ;
+        return response.path("produtos[0]._id");
+    }
+
+    public static String getIdValidoAleatorio(){
+        Response response =
+                produtoClient.listarProduto()
+                        .then()
+                        .extract().response()
+                ;
+        int n = getQuantidadeTotalProdutosCadastrados() -1;
+        System.out.println(n);
+        return response.path("produtos[" + n +"]._id");
+    }
+
+    private static int getQuantidadeTotalProdutosCadastrados(){
+        Response response =
+                produtoClient.listarProduto()
+                        .then()
+                        .extract().response()
+                ;
+        int quantidade = response.path("quantidade");
+        return quantidade;
+    }
+
+    public static ProdutoResponse getProdutoResponseValido(){
+        String id = getIdValido();
+
+        return
+                produtoClient.buscarProduto(id)
+                        .then()
+                        .extract().as(ProdutoResponse.class)
+                ;
+    }
+
+    public static String getIdVazio(){
+        return " ";
+    }
+
+    public static String getIdInvalido(){
+        return String.valueOf(faker.number().numberBetween(-100,-1));
+    }
+
+    public static String getIdProdutoEmCarrinho(){
+        Properties prop =  ConfigUtils.loadProperties();
+        return prop.getProperty("produtoNoCarrinhoId");
+    }
+
+    public static Produto getProdutoComNomeDuplicado(){
+        Produto produto = produtoValido();
+        produto.setNome(getProdutoResponseValido().getNome());
+        return produto;
+    }
+
 }
