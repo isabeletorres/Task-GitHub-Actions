@@ -146,9 +146,13 @@ jobs:
       - name: Consolodar_Report
         if: always()
         run: |
-          mkdir -p target/allure-results
-          cp -r allure-results/Contrato/* target/allure-results/
-          cp -r allure-results/Funcionais/* target/allure-results/
+          echo "Before Copying:"
+          ls -R allure-results
+          mkdir -p allure-results
+          cp -r allure-results/Contrato/* allure-results/
+          cp -r allure-results/Funcionais/* allure-results/
+          echo "After Copying:"
+          ls -R allure-results
 
       - name: Salvar_Allure_Completo
         uses: actions/upload-artifact@v4.6.0
