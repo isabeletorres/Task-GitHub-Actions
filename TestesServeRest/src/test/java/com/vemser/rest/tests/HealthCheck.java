@@ -6,7 +6,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import jdk.jfr.Label;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 
 public class HealthCheck {

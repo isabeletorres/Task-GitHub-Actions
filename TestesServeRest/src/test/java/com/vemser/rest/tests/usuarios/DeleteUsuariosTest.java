@@ -9,7 +9,7 @@ import io.qameta.allure.Story;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import jdk.jfr.Label;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 public class DeleteUsuariosTest {
 

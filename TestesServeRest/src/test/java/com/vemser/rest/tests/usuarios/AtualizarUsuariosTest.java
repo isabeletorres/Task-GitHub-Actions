@@ -13,7 +13,7 @@ import jdk.jfr.Label;
 import net.datafaker.Faker;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 public class AtualizarUsuariosTest {
 
