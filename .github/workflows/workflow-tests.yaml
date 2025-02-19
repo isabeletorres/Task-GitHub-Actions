@@ -3,11 +3,97 @@ name: Pipeline tests ServeRest
 on:
   pull_request:
     branches:
-      -main
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      -name: checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.7.0
+        with: 
+          java-version: '17'
+          distribution: 'oracle'
+        
+      - name: Build Maven
+        run: mvn clean package -DskipTests
+      
+      - name: Upload Artefacts
+        uses: actions/upload-artifact@v4.6.0
+        with: 
+         name: build-artefacts
+         path: target/*.jar
+
+  test: 
+   runs-on: ubuntu-latest
+   needs: build
+   steps:
+       - name: Checkout
+         uses: actions/checkout@v4.2.2
+      
+       - name: Setup Java JDK
+         uses: actions/setup-java@v4.7.0
+         with: 
+          java-version: '17'
+          distribution: 'oracle'
+
+       - name: Download Artefacts
+         uses: actions/download-artifact@v4.1.8
+         with: 
+          name: build-artefacts
+          path: target
+
+       - name: Run Tests with Maven
+         env:
+           USERNAME_ADMIN: ${{secrets.USERNAME_ADMIN}}
+           PASSWORD_ADMIN: ${{secrets.PASSWORD_ADMIN}}
+           USERNAME_USER: ${{secrets.USERNAME_USER}}
+           PASSWORD_USER: ${{secrets.PASSWORD_USER}}
+         run: mvn test
+
+       - name: Generate Allure report
+         if: always()
+         run: mvn allure:report
+
+       - name: Archive Allure Report
+         uses: actions/upload-artifact@v4.6.0
+         with:
+           name: allure-report
+           path: target/site/allure-maven-plugin
+
+       - name: Execute Discord Webhook
+         uses: liondadev/discord-action@v2.1.3
+         with:
+          webhook-url: ${{secrets.WEBHOOK_DISCORD}}
+          message: 'Houve alterações no repositório'
+          
+          
+          
+        
+        
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
