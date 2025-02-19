@@ -1,6 +1,9 @@
 name: Pipeline tests ServeRest
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
