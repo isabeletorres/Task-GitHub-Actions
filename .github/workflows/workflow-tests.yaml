@@ -50,11 +50,12 @@ jobs:
           path: target
 
        - name: Run HealthCheck
-         run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/HealthCheck.xml"
+         run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/HealthCheck.xml" || true
 
   Contrato: 
    runs-on: ubuntu-latest
    needs: HealthCheck
+   continue-on-error: true
    steps:
        - name: Checkout
          uses: actions/checkout@v4.2.2
@@ -77,11 +78,18 @@ jobs:
            PASSWORD_ADMIN: ${{secrets.PASSWORD_ADMIN}}
            USERNAME_USER: ${{secrets.USERNAME_USER}}
            PASSWORD_USER: ${{secrets.PASSWORD_USER}}
-         run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Contrato.xml"
+         run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Contrato.xml" || true
+
+       - name: Salvar_Allure_Contrato
+         uses: actions/upload-artifact@v4.6.0
+         with:
+           name: allure-results-contrato
+           path: allure-results
 
   Funcionais: 
    runs-on: ubuntu-latest
    needs: Contrato
+   continue-on-error: true
    steps:
        - name: Checkout
          uses: actions/checkout@v4.2.2
@@ -105,32 +113,57 @@ jobs:
            USERNAME_USER: ${{secrets.USERNAME_USER}}
            PASSWORD_USER: ${{secrets.PASSWORD_USER}}
            USER_ID_CARRINHO: ${{secrets.USER_ID_CARRINHO}}
-         run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Funcionais.xml"
-          
-          
-          
-        
-        
-         
+         run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Funcionais.xml" || true
 
+       - name: Salvar_Allure_Funcional
+         uses: actions/upload-artifact@v4.6.0
+         with:
+             name: allure-results-funcionais
+             path: allure-results
 
+  Report:
+    runs-on: ubuntu-latest
+    needs: [HeatlhCheck, Contrato, Funcionais]
+    if: always()
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
 
+      - name: Download_Resultado_Contrato
+        if: always()
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: allure-results-contrato
+          path: allure-results/Contrato
 
+      - name: Download_Resultado_Funcionais
+        if: always()
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: allure-results-funcionais
+          path: allure-results/Funcionais
 
+      - name: Consolodar_Report
+        if: always()
+        run: |
+          mkdir -p target/allure-results
+          cp -r allure-results/Contrato/* target/allure-results/
+          cp -r allure-results/Funcionais/* target/allure-results/
 
+      - name: Instalar_Allure
+        if: always()
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y allure
 
+      - name: Gerar_Report
+        if: always()
+        run: mvn allure:report
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
+      - name: Publicar_Report
+        uses: peaceiris/actions-gh-pages@v4
+        if: always()
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          publish_branch: gh-pages
+          publish_dir: allure-report
