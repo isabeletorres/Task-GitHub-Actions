@@ -24,4 +24,20 @@ public class ConfigUtils {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public static String getUsernameAdmin(){
+        return System.getenv("USERNAME_ADMIN");
+    }
+
+    public static String getUsernameUser(){
+        return System.getenv("USERNAME_USER");
+    }
+
+    public static String getPasswordAdmin(){
+        return System.getenv("PASSWORD_ADMIN");
+    }
+
+    public static String getPasswordUser(){
+        return System.getenv("PASSWORD_USER");
+    }
 }

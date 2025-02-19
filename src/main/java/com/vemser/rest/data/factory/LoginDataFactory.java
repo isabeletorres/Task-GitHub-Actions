@@ -54,9 +54,8 @@ public class LoginDataFactory {
     private static Login novoLoginAdmin(){
         Login login = new Login();
 
-        Properties props = ConfigUtils.loadProperties();
-        String email = props.getProperty("email");
-        String password = props.getProperty("password");
+        String email = ConfigUtils.getUsernameAdmin();
+        String password = ConfigUtils.getPasswordAdmin();
 
         login.setEmail(email);
         login.setPassword(password);
@@ -67,9 +66,8 @@ public class LoginDataFactory {
     private static Login novoLoginUsuario(){
         Login login = new Login();
 
-        Properties props = ConfigUtils.loadProperties();
-        String email = props.getProperty("emailUsuario");
-        String password = props.getProperty("passwordUsuario");
+        String email = ConfigUtils.getUsernameUser();
+        String password = ConfigUtils.getPasswordUser();
 
         login.setEmail(email);
         login.setPassword(password);
