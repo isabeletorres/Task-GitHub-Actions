@@ -181,3 +181,9 @@ jobs:
           github_token: ${{secrets.GITHUB_TOKEN}}
           publish_branch: gh-pages
           publish_dir: ./allure-report
+
+      - name: Execute Discord Webhook
+        uses: liondadev/discord-action@v2.1.3
+        with:
+          webhook-url: ${{secrets.WEBHOOK_DISCORD}}
+          message: 'Houve alterações no repositório! Veja os resultados dos testes: [Clique aqui](https://isabeletorres.github.io/Task-GitHub-Actions/)'
