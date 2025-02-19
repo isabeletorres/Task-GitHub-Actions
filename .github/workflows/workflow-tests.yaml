@@ -1,0 +1,13 @@
+name: Pipeline tests ServeRest
+
+on:
+  pull_request:
+    branches:
+      -main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -name: checkout
+      uses: actions/checkout@v3
