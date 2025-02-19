@@ -71,7 +71,7 @@ jobs:
           name: build-artefacts
           path: target
 
-       - name: Run HealthCheck
+       - name: Run Contratos
          env:
            USERNAME_ADMIN: ${{secrets.USERNAME_ADMIN}}
            PASSWORD_ADMIN: ${{secrets.PASSWORD_ADMIN}}
@@ -98,12 +98,13 @@ jobs:
           name: build-artefacts
           path: target
 
-       - name: Run HealthCheck
+       - name: Run Funcionais
          env:
            USERNAME_ADMIN: ${{secrets.USERNAME_ADMIN}}
            PASSWORD_ADMIN: ${{secrets.PASSWORD_ADMIN}}
            USERNAME_USER: ${{secrets.USERNAME_USER}}
            PASSWORD_USER: ${{secrets.PASSWORD_USER}}
+           USER_ID_CARRINHO: ${{secrets.USER_ID_CARRINHO}}
          run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Funcionais.xml"
           
           

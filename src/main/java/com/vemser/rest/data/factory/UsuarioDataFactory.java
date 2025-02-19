@@ -113,7 +113,6 @@ public class UsuarioDataFactory {
     }
 
     public static String getIdUsuarioComCarrinho(){
-        Properties properties = ConfigUtils.loadProperties();
-        return properties.getProperty("idComCarrinho");
+        return ConfigUtils.getUserIdCart();
     }
 }

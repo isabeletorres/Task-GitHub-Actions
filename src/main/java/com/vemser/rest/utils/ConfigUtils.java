@@ -40,4 +40,8 @@ public class ConfigUtils {
     public static String getPasswordUser(){
         return System.getenv("PASSWORD_USER");
     }
+
+    public static String getUserIdCart(){
+        return System.getenv("USER_ID_CARRINHO");
+    }
 }
