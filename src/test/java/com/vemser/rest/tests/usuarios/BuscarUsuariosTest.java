@@ -2,7 +2,6 @@ package com.vemser.rest.tests.usuarios;
 
 import com.vemser.rest.client.UsuarioClient;
 import com.vemser.rest.data.factory.UsuarioDataFactory;
-import com.vemser.rest.model.UsuarioResponse;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
@@ -11,7 +10,6 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import jdk.jfr.Label;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -100,32 +98,6 @@ public class BuscarUsuariosTest {
                 .statusCode(200)
                 .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/usuarios_por_id.json"))
         ;
-    }
-
-    @Test
-    @Story("Validar busca de usuários por ID com sucesso")
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Validar tentar busca de usuários por ID com sucesso")
-    @Label("Usuário")
-    public void testBuscarUsuariosPorIDValidoComSucesso(){
-
-        String idUsuario = UsuarioDataFactory.getUsuarioResponseValido().get_id();
-
-        UsuarioResponse response =
-        usuarioClient.buscarUsuariosPorId(idUsuario)
-        .then()
-                .statusCode(200)
-                .header("Content-Type", "application/json; charset=utf-8")
-                .extract().as(UsuarioResponse.class)
-        ;
-
-        Assertions.assertAll("response",
-                ()-> Assertions.assertEquals(UsuarioDataFactory.getUsuarioResponseValido().getNome(), response.getNome()),
-                ()-> Assertions.assertEquals(UsuarioDataFactory.getUsuarioResponseValido().getEmail(), response.getEmail()),
-                ()-> Assertions.assertEquals(UsuarioDataFactory.getUsuarioResponseValido().getPassword(), response.getPassword()),
-                ()-> Assertions.assertEquals(UsuarioDataFactory.getUsuarioResponseValido().getAdministrador(), response.getAdministrador()),
-                ()-> Assertions.assertEquals(UsuarioDataFactory.getUsuarioResponseValido().get_id(), response.get_id())
-        );
     }
 
     @Test

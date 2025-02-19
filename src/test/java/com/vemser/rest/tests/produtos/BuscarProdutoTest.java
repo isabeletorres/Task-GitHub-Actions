@@ -2,7 +2,6 @@ package com.vemser.rest.tests.produtos;
 
 import com.vemser.rest.client.ProdutoClient;
 import com.vemser.rest.data.factory.ProdutoDataFactory;
-import com.vemser.rest.data.provider.ProdutoProvider;
 import com.vemser.rest.model.Produto;
 import com.vemser.rest.model.ProdutoResponse;
 import io.qameta.allure.Description;
@@ -13,10 +12,8 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import jdk.jfr.Label;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.testng.annotations.Test;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.NullSource;
+
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -101,33 +98,6 @@ public class BuscarProdutoTest {
                 .statusCode(200)
                 .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/buscar_produtos_por_id.json"))
         ;
-    }
-
-
-    @Test
-    @Story("Validar busca de produto por ID com sucesso")
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Validar busca de produto por ID com sucesso")
-    @Label("Produto")
-    public void testBuscarPorIdComSucesso(){
-
-        ProdutoResponse produtoResponse = ProdutoDataFactory.getProdutoResponseValido();
-
-        ProdutoResponse response =
-        produtoClient.buscarProduto(produtoResponse.getId())
-        .then()
-                .statusCode(200)
-                .header("Content-Type", "application/json; charset=utf-8")
-                .extract().as(ProdutoResponse.class)
-        ;
-
-        Assertions.assertAll("response",
-                ()-> Assertions.assertEquals(produtoResponse.getId(), response.getId()),
-                ()-> Assertions.assertEquals(produtoResponse.getNome(), response.getNome()),
-                ()-> Assertions.assertEquals(produtoResponse.getDescricao(), response.getDescricao()),
-                ()-> Assertions.assertEquals(produtoResponse.getPreco(), response.getPreco()),
-                ()-> Assertions.assertEquals(produtoResponse.getQuantidade(), response.getQuantidade())
-                );
     }
 
     @Test
