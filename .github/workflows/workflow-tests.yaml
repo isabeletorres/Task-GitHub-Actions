@@ -131,6 +131,7 @@ jobs:
 
       - name: Download_Resultado_Contrato
         if: always()
+        continue-on-error: true
         uses: actions/download-artifact@v4.1.8
         with:
           name: allure-results-contrato
@@ -138,6 +139,7 @@ jobs:
 
       - name: Download_Resultado_Funcionais
         if: always()
+        continue-on-error: true
         uses: actions/download-artifact@v4.1.8
         with:
           name: allure-results-funcionais
@@ -146,13 +148,9 @@ jobs:
       - name: Consolodar_Report
         if: always()
         run: |
-          echo "Before Copying:"
-          ls -R allure-results
           mkdir -p allure-results
-          cp -r allure-results/Contrato/* allure-results/
-          cp -r allure-results/Funcionais/* allure-results/
-          echo "After Copying:"
-          ls -R allure-results
+          cp -r allure-results/Contrato/* allure-results/ || true
+          cp -r allure-results/Funcionais/* allure-results/ || true
 
       - name: Salvar_Allure_Completo
         uses: actions/upload-artifact@v4.6.0
