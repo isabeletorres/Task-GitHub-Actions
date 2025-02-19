@@ -158,7 +158,8 @@ jobs:
 
       - name: Gerar_Report
         if: always()
-        run: mvn allure:report
+        run: |
+          allure generate allure-results -o allure-report
 
       - name: Publicar_Report
         uses: peaceiris/actions-gh-pages@v4
@@ -166,4 +167,4 @@ jobs:
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
           publish_branch: gh-pages
-          publish_dir: allure-report
+          publish_dir: ./allure-report
