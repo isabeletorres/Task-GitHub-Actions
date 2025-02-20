@@ -51,7 +51,17 @@ jobs:
 
        - name: Run HealthCheck
          id: healthcheck
-         run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/HealthCheck.xml" || true
+         run: |
+          if mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Batata.xml"; then
+            echo "success" > healthcheck_status.txt
+          else
+            echo "failure" > healthcheck_status.txt
+
+       - name: Salvar_Status_HealthCheck
+         uses: actions/upload-artifact@v4.6.0
+         with:
+           name: healthcheck_status
+           path: healthcheck_status.txt
 
   Contrato: 
    runs-on: ubuntu-latest
@@ -80,7 +90,18 @@ jobs:
            PASSWORD_ADMIN: ${{secrets.PASSWORD_ADMIN}}
            USERNAME_USER: ${{secrets.USERNAME_USER}}
            PASSWORD_USER: ${{secrets.PASSWORD_USER}}
-         run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Contrato.xml" || true
+         run: | 
+          if mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Contrato.xml"; then
+            echo "success" > contrato_status.txt
+          else
+            echo "failure" > contrato_status.txt
+          fi 
+
+       - name: Salvar_Status_Contrato
+         uses: actions/upload-artifact@v4.6.0
+         with:
+           name: contrato_status
+           path: contrato_status.txt
 
        - name: Salvar_Allure_Contrato
          uses: actions/upload-artifact@v4.6.0
@@ -117,7 +138,7 @@ jobs:
            PASSWORD_USER: ${{secrets.PASSWORD_USER}}
            USER_ID_CARRINHO: ${{secrets.USER_ID_CARRINHO}}
          run: | 
-          if mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Batata.xml"; then
+          if mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Funcionais.xml"; then
             echo "success" > funcionais_status.txt
           else
             echo "failure" > funcionais_status.txt
@@ -165,7 +186,17 @@ jobs:
           name: funcionais_status
           path: ./
 
-      - name: Consolodar_Report
+      - uses: actions/download-artifact@v4.1.8
+        with:
+          name: healthcheck_status
+          path: ./
+
+      - uses: actions/download-artifact@v4.1.8
+        with:
+          name: contrato_status
+          path: ./
+
+      - name: Consolidar_Report
         if: always()
         run: |
           mkdir -p allure-results
@@ -207,8 +238,8 @@ jobs:
           STATUS_FUNC="✅ Success"
 
           # Capturar o status real dos jobs
-          if [[ "${{ needs.HealthCheck.result }}" == "failure" ]]; then STATUS_HEALTH="❌ Failed"; fi
-          if [[ "${{ needs.Contrato.result }}" == "failure" ]]; then STATUS_CONTRATO="❌ Failed"; fi
+          if [[ "$(cat healthcheck_status.txt)" == "failure" ]]; then STATUS_HEALTH="❌ Failed"; fi
+          if [[ "$(cat contrato_status.txt)" == "failure" ]]; then STATUS_CONTRATO="❌ Failed"; fi
           if [[ "$(cat funcionais_status.txt)" == "failure" ]]; then STATUS_FUNC="❌ Failed"; fi
 
           # Definir cor da mensagem (vermelho se houver falha)
