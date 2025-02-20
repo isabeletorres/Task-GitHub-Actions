@@ -32,6 +32,9 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: 'java'
+          
+      - name: build 
+        uses: github/codeql-action/autobuild@v3
 
       - name: Executar análise CodeQL
         uses: github/codeql-action/analyze@v3
