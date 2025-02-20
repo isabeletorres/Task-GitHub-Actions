@@ -55,6 +55,7 @@ jobs:
           if mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Batata.xml"; then
             echo "success" > healthcheck_status.txt
           else
+            echo "HEALTHCHECK_FAIL=true" >> $GITHUB_ENV
             echo "failure" > healthcheck_status.txt
           fi 
 
@@ -64,6 +65,10 @@ jobs:
          with:
            name: healthcheck_status
            path: healthcheck_status.txt
+
+       - name: Falhar_Job_Quando_Healthcheck_Falhar
+         if: env.HEALTHCHECK_FAIL == 'true'
+         run: exit 1
 
   Contrato: 
    runs-on: ubuntu-latest
