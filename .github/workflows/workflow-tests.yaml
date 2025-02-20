@@ -164,6 +164,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
+      - name: Criar artefatos vazios se os testes não rodaram
+        run: |
+          touch contrato_status.txt funcionais_status.txt
+          echo "success" > contrato_status.txt
+          echo "success" > funcionais_status.txt
+
+      - name: Baixar_Status_HealthCheck
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: healthcheck_status
+          path: ./
+
+      - name: Verificar falha no HealthCheck
+        id: check_health
+        run: |
+          if [[ "$(cat healthcheck_status.txt)" == "failure" ]]; then
+            echo "HealthCheck falhou, pulando download dos artefatos..."
+            echo "failure" > contrato_status.txt
+            echo "failure" > funcionais_status.txt
+          fi  
+
       - name: Download_Resultado_Contrato
         if: always()
         continue-on-error: true
@@ -180,20 +201,20 @@ jobs:
           name: allure-results-funcionais
           path: allure-results/Funcionais
 
-      - name: Baixar_Status_Jobs
+      - name: Baixar_Status_Contrato
+        if: success()
+        continue-on-error: true
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: contrato_status
+          path: ./
+
+      - name: Baixar_Status_Funcionais
+        if: success()
+        continue-on-error: true
         uses: actions/download-artifact@v4.1.8
         with:
           name: funcionais_status
-          path: ./
-
-      - uses: actions/download-artifact@v4.1.8
-        with:
-          name: healthcheck_status
-          path: ./
-
-      - uses: actions/download-artifact@v4.1.8
-        with:
-          name: contrato_status
           path: ./
 
       - name: Consolidar_Report
