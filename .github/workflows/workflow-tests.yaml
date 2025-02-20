@@ -50,6 +50,7 @@ jobs:
           path: target
 
        - name: Run HealthCheck
+         continue-on-error: true
          id: healthcheck
          run: |
           if mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Batata.xml"; then
@@ -58,6 +59,7 @@ jobs:
             echo "failure" > healthcheck_status.txt
 
        - name: Salvar_Status_HealthCheck
+         continue-on-error: true
          uses: actions/upload-artifact@v4.6.0
          with:
            name: healthcheck_status
@@ -173,7 +175,6 @@ jobs:
 
       - name: Baixar_Status_HealthCheck
         uses: actions/download-artifact@v4.1.8
-        continue-on-error: true
         with:
           name: healthcheck_status
           path: ./
