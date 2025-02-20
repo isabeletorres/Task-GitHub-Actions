@@ -116,7 +116,18 @@ jobs:
            USERNAME_USER: ${{secrets.USERNAME_USER}}
            PASSWORD_USER: ${{secrets.PASSWORD_USER}}
            USER_ID_CARRINHO: ${{secrets.USER_ID_CARRINHO}}
-         run: mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Batata.xml" || true
+         run: | 
+          if mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Batata.xml"; then
+            echo "success" > funcionais_status.txt
+          else
+            echo "failure" > funcionais_status.txt
+          fi
+
+       - name: Salvar_Status_Funcionais
+         uses: actions/upload-artifact@v4.6.0
+         with:
+            name: funcionais_status
+            path: funcionais_status.txt
 
        - name: Salvar_Allure_Funcional
          uses: actions/upload-artifact@v4.6.0
@@ -147,6 +158,12 @@ jobs:
         with:
           name: allure-results-funcionais
           path: allure-results/Funcionais
+
+      - name: Baixar_Status_Jobs
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: funcionais_status
+          path: ./
 
       - name: Consolodar_Report
         if: always()
@@ -192,7 +209,7 @@ jobs:
           # Capturar o status real dos jobs
           if [[ "${{ needs.HealthCheck.result }}" == "failure" ]]; then STATUS_HEALTH="❌ Failed"; fi
           if [[ "${{ needs.Contrato.result }}" == "failure" ]]; then STATUS_CONTRATO="❌ Failed"; fi
-          if [[ "${{ needs.Funcionais.result }}" == "failure" ]]; then STATUS_FUNC="❌ Failed"; fi
+          if [[ "$(cat funcionais_status.txt)" == "failure" ]]; then STATUS_FUNC="❌ Failed"; fi
 
           # Definir cor da mensagem (vermelho se houver falha)
           COLOR=65280  # Verde
