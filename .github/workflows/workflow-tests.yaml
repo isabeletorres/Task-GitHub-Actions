@@ -221,15 +221,11 @@ jobs:
           path: ./
 
       - name: Consolidar_Report
-        if: always()
+        if: env.SKIP != 'true'
         run: |
           mkdir -p allure-results
-          if [[ -d allure-results/Contrato ]]; then
-            cp -r allure-results/Contrato/* allure-results/ || true
-          fi
-          if [[ -d allure-results/Funcionais ]]; then
-            cp -r allure-results/Funcionais/* allure-results/ || true
-          fi
+          cp -r allure-results/Contrato/* allure-results/ || true
+          cp -r allure-results/Funcionais/* allure-results/ || true
 
       - name: Salvar_Allure_Completo
         uses: actions/upload-artifact@v4.6.0
