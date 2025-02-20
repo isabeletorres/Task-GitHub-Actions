@@ -21,7 +21,13 @@ jobs:
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4.2.2
-
+        
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.7.0
+        with: 
+          java-version: '17'
+          distribution: 'oracle'
+          
       - name: Inicializar CodeQL
         uses: github/codeql-action/init@v3
         with:
