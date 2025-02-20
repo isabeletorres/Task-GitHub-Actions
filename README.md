@@ -41,29 +41,6 @@ Report: Gera relatórios com os resultados dos testes para acompanhamento e aná
 
 ```
 Projeto
-│── test
-│   ├── java
-│       ├── com
-│           ├── vemser
-│               ├── rest
-│                   ├── tests
-│                       ├── login
-│                           ├── LoginTest
-│                       ├── produtos
-│                           ├── BuscarProdutoTest
-│                       ├── usuarios
-│                           ├── AtualizarUsuariosTest
-│                           ├── BuscarUsuariosTest
-│                           ├── CadastrarUsuariosTest
-│                           ├── DeleteUsuariosTest
-│                       ├── HealthCheck
-│   ├── resources
-│── target
-│   ├── tests-suites
-│       ├── Contrato.xml
-│       ├── Funcionais.xml
-│       ├── HealthCheck.xml
-Projeto
 │── .github
 │   ├── workflows
 │       ├── workflow-tests.yaml
