@@ -52,7 +52,7 @@ jobs:
        - name: Run HealthCheck
          id: healthcheck
          run: |
-          if mvn test "-Dsurefire.suiteXmlFiles=tests-suites/Batata.xml"; then
+          if mvn test "-Dsurefire.suiteXmlFiles=tests-suites/HealthCheck.xml"; then
             echo "success" > healthcheck_status.txt
           else
             echo "HEALTHCHECK_FAIL=true" >> $GITHUB_ENV
