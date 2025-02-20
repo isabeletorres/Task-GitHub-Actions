@@ -183,28 +183,29 @@ jobs:
           publish_branch: gh-pages
           publish_dir: ./allure-report
 
-      - name: Execute Discord Webhook
-        env:
-          WEBHOOK_URL: ${{secrets.WEBHOOK_DISCORD}}
+      - name: Enviar notificação para Discord
         run: |
           STATUS_HEALTH="✅ Success"
           STATUS_CONTRATO="✅ Success"
           STATUS_FUNC="✅ Success"
-            
-          if [[ "${{ steps.healthcheck.outcome }} == "failure" ]]; then STATUS_HEALTH="❌ Failed"; fi
-          if [[ "${{ steps.contrato.outcome }} == "failure" ]]; then STATUS_CONTRATO="❌ Failed"; fi
-          if [[ "${{ steps.funcionais.outcome }} == "failure" ]]; then STATUS_FUNC="❌ Failed"; fi
-            
-          COLOR=65280
+
+          # Capturar o status real dos jobs
+          if [[ "${{ needs.HealthCheck.result }}" == "failure" ]]; then STATUS_HEALTH="❌ Failed"; fi
+          if [[ "${{ needs.Contrato.result }}" == "failure" ]]; then STATUS_CONTRATO="❌ Failed"; fi
+          if [[ "${{ needs.Funcionais.result }}" == "failure" ]]; then STATUS_FUNC="❌ Failed"; fi
+
+          # Definir cor da mensagem (vermelho se houver falha)
+          COLOR=65280  # Verde
           if [[ "$STATUS_HEALTH" == "❌ Failed" || "$STATUS_CONTRATO" == "❌ Failed" || "$STATUS_FUNC" == "❌ Failed" ]]; then
-            COLOR=16711680
+            COLOR=16711680  # Vermelho
           fi
-            
+
+          # Enviar notificação para o Discord
           curl -H "Content-Type: application/json" -X POST -d '{
             "username": "Megazord da Qualidade",
             "embeds": [{
               "title": "🚀 Resultado da Pipeline",
-              "description": "**Status dos Testes:**\n\n 🔹 **HealthCheck:** '"$STATUS_HEALTH"'\n🔹 **Contrato:** '"$STATUS_CONTRATO"'\n🔹 **Funcionais:** '"$STATUS_FUNC"'\n\n**Report:** [Clique aqui](https://isabeletorres.github.io/Task-GitHub-Actions/)",
+              "description": "**Status dos Testes:**\n\n 🔹 **HealthCheck:** '"$STATUS_HEALTH"'\n🔹 **Contrato:** '"$STATUS_CONTRATO"'\n🔹 **Funcionais:** '"$STATUS_FUNC"'\n\n**[📊 Relatório de Testes](https://isabeletorres.github.io/Task-GitHub-Actions/)**",
               "color": '"$COLOR"'
             }]
-          }' $WEBHOOK_URL
+          }' ${{ secrets.WEBHOOK_DISCORD }}
