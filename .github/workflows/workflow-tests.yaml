@@ -59,7 +59,6 @@ jobs:
             echo "failure" > healthcheck_status.txt
 
        - name: Salvar_Status_HealthCheck
-         continue-on-error: true
          uses: actions/upload-artifact@v4.6.0
          with:
            name: healthcheck_status
