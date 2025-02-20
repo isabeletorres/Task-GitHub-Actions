@@ -166,9 +166,10 @@ jobs:
 
       - name: Criar artefatos vazios se os testes não rodaram
         run: |
-          touch contrato_status.txt funcionais_status.txt
+          touch healthcheck_status.txt contrato_status.txt funcionais_status.txt
           echo "success" > contrato_status.txt
           echo "success" > funcionais_status.txt
+          echo "success" > healthcheck_status.txt
 
       - name: Baixar_Status_HealthCheck
         uses: actions/download-artifact@v4.1.8
@@ -180,13 +181,14 @@ jobs:
         id: check_health
         run: |
           if [[ "$(cat healthcheck_status.txt)" == "failure" ]]; then
-            echo "HealthCheck falhou, pulando download dos artefatos..."
             echo "failure" > contrato_status.txt
             echo "failure" > funcionais_status.txt
+            echo "failure" > healthcheck_status.txt
+            echo "SKIP=true" >> $GITHUB_ENV
           fi  
 
       - name: Download_Resultado_Contrato
-        if: always()
+        if: env.SKIP != 'true'
         continue-on-error: true
         uses: actions/download-artifact@v4.1.8
         with:
@@ -194,7 +196,7 @@ jobs:
           path: allure-results/Contrato
 
       - name: Download_Resultado_Funcionais
-        if: always()
+        if: env.SKIP != 'true'
         continue-on-error: true
         uses: actions/download-artifact@v4.1.8
         with:
@@ -202,7 +204,7 @@ jobs:
           path: allure-results/Funcionais
 
       - name: Baixar_Status_Contrato
-        if: success()
+        if: env.SKIP != 'true'
         continue-on-error: true
         uses: actions/download-artifact@v4.1.8
         with:
@@ -210,7 +212,7 @@ jobs:
           path: ./
 
       - name: Baixar_Status_Funcionais
-        if: success()
+        if: env.SKIP != 'true'
         continue-on-error: true
         uses: actions/download-artifact@v4.1.8
         with:
