@@ -34,7 +34,9 @@ Funcionais: Valida se as funcionalidades do sistema estão operando conforme esp
 
 Report: Gera relatórios com os resultados dos testes para acompanhamento e análise e notificação via Discord
 
-![Captura de tela 2025-02-20 100213](https://github.com/user-attachments/assets/6f507b3e-b6be-44ab-a7ff-891d64f20e7e)
+![Captura de tela 2025-02-20 135729](https://github.com/user-attachments/assets/dfd4539a-2b5b-41c3-b258-17e6b7dd0483)
+
+![image](https://github.com/user-attachments/assets/f0b0cd68-0cf7-4bc0-b99a-02ce06fbe613)
 
 ### Arquitetura do projeto 
 
