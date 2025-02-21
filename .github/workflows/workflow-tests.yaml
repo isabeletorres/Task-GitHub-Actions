@@ -36,12 +36,6 @@ jobs:
    steps:
        - name: Checkout
          uses: actions/checkout@v4.2.2
-      
-       - name: Setup Java JDK
-         uses: actions/setup-java@v4.7.0
-         with: 
-          java-version: '17'
-          distribution: 'oracle'
 
        - name: Download Artefacts
          uses: actions/download-artifact@v4.1.8
@@ -78,12 +72,6 @@ jobs:
        - name: Checkout
          uses: actions/checkout@v4.2.2
       
-       - name: Setup Java JDK
-         uses: actions/setup-java@v4.7.0
-         with: 
-          java-version: '17'
-          distribution: 'oracle'
-
        - name: Download Artefacts
          uses: actions/download-artifact@v4.1.8
          with: 
@@ -123,12 +111,6 @@ jobs:
    steps:
        - name: Checkout
          uses: actions/checkout@v4.2.2
-      
-       - name: Setup Java JDK
-         uses: actions/setup-java@v4.7.0
-         with: 
-          java-version: '17'
-          distribution: 'oracle'
 
        - name: Download Artefacts
          uses: actions/download-artifact@v4.1.8
